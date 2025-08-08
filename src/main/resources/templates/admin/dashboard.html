@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr"
+      th:replace="~{admin/_layout :: layout(~{::section}, ~{::title})}">
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+<section>
+  <h2 class="h4 mb-3">Özet</h2>
+  <p>Toplam Üniversite: <strong th:text="${countUniversities}">0</strong></p>
+  <a href="/ui/universities" class="btn btn-primary">Üniversiteleri Yönet</a>
+</section>
+</body>
+</html>
