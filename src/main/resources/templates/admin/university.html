@@ -24,6 +24,9 @@
       <div class="col">
         <input type="text" th:field="*{website}" placeholder="Website" class="form-control">
       </div>
+      <div class="col">
+        <input type="file" name="logo" accept="image/*" class="form-control">
+      </div>
       <div class="col-auto">
         <button type="submit" class="btn btn-success">Ekle</button>
       </div>
@@ -47,6 +50,13 @@
       <div class="col">
         <input type="text" th:field="*{website}" placeholder="Website" class="form-control">
       </div>
+      <div class="col">
+        <input type="file" name="logo" accept="image/*" class="form-control">
+      <!-- mevcut logo önizleme -->
+        <img th:if="${form.logoBase64 != null}"
+            th:src="|data:${form.logoContentType};base64,${form.logoBase64}|"
+            alt="Logo" style="height:40px;margin-top:6px;">
+      </div>
       <div class="col-auto">
         <button type="submit" class="btn btn-primary">Güncelle</button>
         <a href="/ui/universities" class="btn btn-secondary ms-2">Yeni</a>
@@ -58,6 +68,7 @@
   <table class="table table-bordered">
     <thead>
     <tr>
+      <th>Logo</th>
       <th>ID</th>
       <th>Ad</th>
       <th>Website</th>
@@ -66,9 +77,14 @@
     </thead>
     <tbody>
     <tr th:each="u : ${universities}">
-      <td th:text="${u.id}">1</td>
-      <td th:text="${u.name}">Ad</td>
-      <td th:text="${u.website}">site</td>
+      <td>
+       <img th:if="${u.logoBase64 != null}"
+            th:src="|data:${u.logoContentType};base64,${u.logoBase64}|"
+            alt="Logo" style="height:75px"></img>
+      </td>
+      <td th:text="${u.id}" style="text-align: center;">1</td>
+      <td th:text="${u.name}" style="text-align: center;">Ad</td>
+      <td th:text="${u.website}" style="text-align: center;">site</td>
       <td>
         <a th:href="@{/ui/universities/{id}/edit(id=${u.id})}" class="btn btn-sm btn-primary">Düzenle</a>
 

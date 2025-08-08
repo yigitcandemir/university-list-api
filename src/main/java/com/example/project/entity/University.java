@@ -53,7 +53,21 @@ public class University {
     @Column(name = "deleted_by")
     private String deletedBy;
 
+    @Column(name = "logo_base64", columnDefinition="LONGTEXT")
+    private String logoBase64;
+
+    @Column(name = "logo_content_type")
+    private String logoContentType;
+
         
+    public String getLogoContentType() {
+        return logoContentType;
+    }
+
+    public void setLogoContentType(String logoContentType) {
+        this.logoContentType = logoContentType;
+    }
+
     public List<Campus> getCampuses() {
         return campuses;
     }
@@ -135,6 +149,14 @@ public class University {
     } 
     public void setUpdatedBy(String updatedBy){
         this.updatedBy = updatedBy;
+    }
+
+    public String getLogoBase64() {
+        return logoBase64;
+    }
+
+    public void setLogoBase64(String logoBase64) {
+        this.logoBase64 = logoBase64;
     }
 
 }
