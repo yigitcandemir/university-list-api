@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -14,21 +15,33 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "universiteler")
-public class University {
+@Table(name = "faculty")
+public class Faculty {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+    public String getDeletedBy() {
+        return deletedBy;
+    }
     private String name;
-    private String website;
 
-    @OneToMany(mappedBy = "university", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
+    @JoinColumn(name = "campus_id")
+    @JsonBackReference
+    private Campus campus;
+
+    private String telephone;
+    private String dean;
+
+    @OneToMany(mappedBy="faculty", cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonManagedReference
-    private List<Campus> campuses;
+    private List<Department> department;
 
     @Column(name = "is_deleted")
     private Boolean deleted = false;
@@ -37,6 +50,9 @@ public class University {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Column(name = "createdBy", updatable=false)
+    private String createdBy;
+
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
@@ -44,39 +60,15 @@ public class University {
     @Column(name = "updated_by")
     private String updatedBy;
 
-    @Column(name = "created_by", updatable=false)
-    private String createdBy;
-
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @Column(name = "deleted_by")
     private String deletedBy;
 
-        
-    public List<Campus> getCampuses() {
-        return campuses;
-    }
+    public Faculty(){}
 
-    public void setCampuses(List<Campus> campuses) {
-        this.campuses = campuses;
-    }
-
-    public University() {}
-
-    public University(String name, String website) {
-        this.name = name;
-        this.website = website;
-    }
-
-    public University(int id, String name, String website) {
-        this.id = id;
-        this.name = name;
-        this.website = website;
-    }
-
-    public int getId()
-    {
+    public int getId(){
         return id;
     }
     public void setId(int id){
@@ -84,15 +76,33 @@ public class University {
     }
     public String getName(){
         return name;
-    }
+    } 
     public void setName(String name){
         this.name = name;
     }
-    public String getWebsite(){
-        return website;
+    public Campus getCampus(){
+        return campus;
     }
-    public void setWebsite(String website){
-        this.website = website;
+    public void setCampus(Campus campus){
+        this.campus = campus;
+    }
+    public String getTelephone(){
+        return telephone;
+    }
+    public void setTelephone(String telephone){
+        this.telephone = telephone;
+    }
+    public String getDean(){
+        return dean;
+    }
+    public void setDean(String dean){
+        this.dean = dean;
+    }
+    public List<Department> getDepartment(){
+        return department;
+    }
+    public void setDepartment(List<Department> department){
+        this.department = department;
     }
     public Boolean isDeleted(){
         return deleted;
@@ -118,10 +128,10 @@ public class University {
     public void setDeletedAt(LocalDateTime deletedAt){
         this.deletedAt = deletedAt;
     }
-    public String getDeletedBy(){
+    public String getDeleteBy(){
         return deletedBy;
     }
-    public void setDeletedBy(String deletedBy){
+    public void setDeleteBy(String deletedBy){
         this.deletedBy = deletedBy;
     }
     public String getCreatedBy(){
@@ -136,5 +146,4 @@ public class University {
     public void setUpdatedBy(String updatedBy){
         this.updatedBy = updatedBy;
     }
-
 }
