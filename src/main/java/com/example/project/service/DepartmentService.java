@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.project.entity.Department;
+import com.example.project.entity.DepartmentHistory;
+import com.example.project.repository.DepartmentHistoryRepository;
 import com.example.project.repository.DepartmentRepository;
 
 @Service
 public class DepartmentService {
     
     @Autowired
-    public DepartmentRepository departmentRepository;
+    private DepartmentRepository departmentRepository;
+    @Autowired
+    private DepartmentHistoryRepository departmentHistoryRepository;
 
     public List<Department> getAllDepartments(){
         return departmentRepository.findByDeletedFalse();
@@ -31,16 +35,26 @@ public class DepartmentService {
 
     public Department updateDepartment(int id, Department updated, String updatedBy){
         Department existing = getById(id);
-        if(existing != null){
-            existing.setName(updated.getName());
-            existing.setFaculty(updated.getFaculty());
+        if(existing == null) return null;
+        
+        DepartmentHistory h = new DepartmentHistory();
+        h.setDepartmentId(existing.getId());
+        h.setfacultyId(existing.getFaculty().getId());
+        h.setName(existing.getName());
+        h.setOperationType("UPDATE");
+        h.setOperatedBy(updatedBy);
+        departmentHistoryRepository.save(h);
 
-            existing.setUpdatedAt(LocalDateTime.now());
-            existing.setUpdatedBy(updatedBy);
 
-            return departmentRepository.save(existing);
-        }
-        return null;
+        existing.setName(updated.getName());
+        existing.setFaculty(updated.getFaculty());
+
+        existing.setUpdatedAt(LocalDateTime.now());
+        existing.setUpdatedBy(updatedBy);
+
+        return departmentRepository.save(existing);
+        
+        
     }
 
     public void softDelete(int id, String deletedBy){

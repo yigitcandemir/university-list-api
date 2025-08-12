@@ -1,0 +1,116 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="tr"
+      th:replace="~{admin/_layout :: layout(~{::section}, ~{::title})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Kampüs Yönetimi</title>
+</head>
+<body>
+<section>
+<h2 class="h4 mb-3">Kampüsler</h2>
+
+<!-- ====== EKLEME FORMU ====== -->
+<form th:if="${form.id} == null or ${form.id} == 0"
+      th:object="${form}" method="post"
+      th:action="@{/ui/campuses}"
+      class="mb-3">
+
+  <input th:if="${_csrf != null}" type="hidden"
+         th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+  <div class="row g-2">
+    <div class="col">
+      <input type="text" th:field="*{name}" placeholder="Kampüs Adı" class="form-control" required>
+    </div>
+    <div class="col">
+      <input type="text" th:field="*{city}" placeholder="Şehir" class="form-control" required>
+    </div>
+    <div class="col">
+      <input type="text" th:field="*{district}" placeholder="İlçe" class="form-control" required>
+    </div>
+    <div class="col">
+      <textarea th:field="*{address}" placeholder="Adres" class="form-control"></textarea>
+    </div>
+    <div class="col">
+      <select th:field="*{university.id}" class="form-select" required>
+        <option value="">-- Üniversite Seç --</option>
+        <option th:each="u : ${universities}" th:value="${u.id}" th:text="${u.name}"></option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-success">Ekle</button>
+    </div>
+  </div>
+</form>
+
+<!-- ====== GÜNCELLEME FORMU ====== -->
+<form th:if="${form.id} != null and ${form.id} != 0"
+      th:object="${form}" method="post"
+      th:action="@{/ui/campuses/{id}/edit(id=${form.id})}"
+      class="mb-3">
+
+  <input type="hidden" th:field="*{id}" />
+  <input th:if="${_csrf != null}" type="hidden"
+         th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+  <div class="row g-2">
+    <div class="col">
+      <input type="text" th:field="*{name}" placeholder="Kampüs Adı" class="form-control" required>
+    </div>
+    <div class="col">
+      <input type="text" th:field="*{city}" placeholder="Şehir" class="form-control" required>
+    </div>
+    <div class="col">
+      <input type="text" th:field="*{district}" placeholder="İlçe" class="form-control" required>
+    </div>
+    <div class="col">
+      <textarea th:field="*{address}" placeholder="Adres" class="form-control"></textarea>
+    </div>
+    <div class="col">
+      <select th:field="*{university.id}" class="form-select" required>
+        <option value="">-- Üniversite Seç --</option>
+        <option th:each="u : ${universities}" th:value="${u.id}" th:text="${u.name}"></option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Güncelle</button>
+      <a href="/ui/campuses" class="btn btn-secondary ms-2">Yeni</a>
+    </div>
+  </div>
+</form>
+
+<!-- ====== LİSTE ====== -->
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Ad</th>
+    <th>Şehir</th>
+    <th>İlçe</th>
+    <th>Adres</th>
+    <th>Üniversite</th>
+    <th>İşlemler</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="c : ${campuses}">
+    <td th:text="${c.id}"></td>
+    <td th:text="${c.name}"></td>
+    <td th:text="${c.city}"></td>
+    <td th:text="${c.district}"></td>
+    <td th:text="${c.address}"></td>
+    <td th:text="${c.university != null ? c.university.name : ''}"></td>
+    <td>
+      <a th:href="@{/ui/campuses/{id}/edit(id=${c.id})}" class="btn btn-sm btn-primary">Düzenle</a>
+      <form th:action="@{/ui/campuses/{id}/delete(id=${c.id})}" method="post" style="display:inline;">
+        <input th:if="${_csrf != null}" type="hidden"
+               th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <button type="submit" class="btn btn-sm btn-danger"
+                onclick="return confirm('Silinsin mi?')">Sil</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</section>
+</body>
+</html>

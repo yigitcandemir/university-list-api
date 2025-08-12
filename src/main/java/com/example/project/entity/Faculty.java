@@ -131,7 +131,7 @@ public class Faculty {
     public String getDeleteBy(){
         return deletedBy;
     }
-    public void setDeleteBy(String deletedBy){
+    public void setDeletedBy(String deletedBy){
         this.deletedBy = deletedBy;
     }
     public String getCreatedBy(){

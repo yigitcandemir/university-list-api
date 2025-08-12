@@ -7,13 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.project.entity.Faculty;
+import com.example.project.entity.FacultyHistory;
+import com.example.project.repository.FacultyHistoryRepository;
 import com.example.project.repository.FacultyRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class FacultyService {
 
     @Autowired
-    public FacultyRepository facultyRepository;
+    private FacultyRepository facultyRepository;
+    @Autowired
+    private FacultyHistoryRepository facultyHistoryRepository;
 
     public List<Faculty> getAllFaculties(){
         return facultyRepository.findByDeletedFalse();
@@ -29,20 +35,33 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
+    @Transactional
     public Faculty updateFaculty(int id, Faculty updated, String updatedBy){
         Faculty existing = getById(id);
-        if(existing != null){
-            existing.setName(updated.getName());
-            existing.setTelephone(updated.getTelephone());
-            existing.setDean(updated.getDean());
-            existing.setCampus(updated.getCampus());
+        if(existing != null) return null;
 
-            existing.setUpdatedAt(LocalDateTime.now());
-            existing.setUpdatedBy(updatedBy);
+        FacultyHistory h = new FacultyHistory();
+        h.setFacultyId(existing.getId());
+        h.setName(existing.getName());
+        h.setTelephone(existing.getTelephone());
+        h.setDean(existing.getDean());
+        h.setCampusId(existing.getCampus().getId());
+        h.setActionType("UPDATE");
+        h.setActionBy(updatedBy);
+        facultyHistoryRepository.save(h);
 
-            return facultyRepository.save(existing);
-        }
-        return null;
+
+        existing.setName(updated.getName());
+        existing.setTelephone(updated.getTelephone());
+        existing.setDean(updated.getDean());
+        existing.setCampus(updated.getCampus());
+
+        existing.setUpdatedAt(LocalDateTime.now());
+        existing.setUpdatedBy(updatedBy);
+
+        return facultyRepository.save(existing);
+        
+        
     }
 
     public void softDelete(int id, String deletedBy){
@@ -50,7 +69,7 @@ public class FacultyService {
         if(faculty != null){
             faculty.setDeleted(true);
             faculty.setDeletedAt(LocalDateTime.now());
-            faculty.setDeleteBy(deletedBy);
+            faculty.setDeletedBy(deletedBy);
             facultyRepository.save(faculty);
         }
     }

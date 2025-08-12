@@ -1,6 +1,7 @@
 package com.example.project.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,19 +13,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.project.entity.Campus;
 import com.example.project.entity.University;
+import com.example.project.service.CampusService;
+import com.example.project.service.DepartmentService;
+import com.example.project.service.FacultyService;
 import com.example.project.service.UniversityService;
+
+
+
+
 
 
 @Controller
 @RequestMapping("/ui")
 public class AdminUIController {
     private final UniversityService universityService;
+    private final CampusService campusService;
+    private final FacultyService facultyService;
+    private final DepartmentService departmentService;
 
-    public AdminUIController(UniversityService universityService){
+    
+    public AdminUIController(UniversityService universityService, CampusService campusService, FacultyService facultyService, DepartmentService departmentService){
         this.universityService = universityService;
+        this.campusService = campusService;
+        this. facultyService = facultyService;
+        this.departmentService = departmentService;
     }
     
+    //UNIVERSITY
     @GetMapping
     public String dashboard(Model model) {                                                          //Admin ana sayfası için (dashboard)
         model.addAttribute("countUniversities", universityService.getAllUniversities().size());
@@ -64,7 +81,6 @@ public class AdminUIController {
     }
     
 
-
     @PostMapping("/universities/{id}/edit")
     public String updateUniversity(@PathVariable int id, @ModelAttribute("form") University u, @RequestParam(value = "logo", required = false) MultipartFile logo) {    //Üniversite güncellemek için yapı
         if(logo != null && !logo.isEmpty()){
@@ -78,5 +94,46 @@ public class AdminUIController {
         universityService.updateUniversity(id, u, "admin");
         return "redirect:/ui/universities";
     }
+
+
+
+    //CAMPUS
+    @GetMapping("/campuses")
+    public String campuses(Model model) {
+        model.addAttribute("campuses", campusService.getAllCampuses());
+        model.addAttribute("universities", universityService.getAllUniversities());
+        Campus form = new Campus();
+        form.setUniversity(new University()); 
+        model.addAttribute("form", form);
+        return "admin/campus";
+    }
+
+    @PostMapping("/campuses")
+    public String createCampus(@ModelAttribute("form") Campus c, Principal p) {
+        campusService.createCampuses(c, p != null ? p.getName() : "admin");
+        return "redirect:/ui/campuses";
+    }
+
+    @GetMapping("/campuses/{id}/edit")
+    public String editCampusForm(@PathVariable int id, Model model) {
+        Campus c = campusService.getById(id);
+        if (c == null) return "redirect:/ui/campuses?notfound";
+
+        model.addAttribute("campuses", campusService.getAllCampuses());
+        model.addAttribute("universities", universityService.getAllUniversities());
+        model.addAttribute("form", c); 
+        return "admin/campus";
+    }
+
+    @PostMapping("/campuses/{id}/edit")
+    public String editCampus(@PathVariable int id, @ModelAttribute Campus c, Principal p) {
+        campusService.updateCampus(id, c, p != null ? p.getName() : "admin");
+        return "redirect:/ui/campuses";
+    }
     
+    @PostMapping("/campuses/{id}/delete")
+    public String deleteCampus(@PathVariable int id, Principal p) {
+        campusService.softDelete(id, p != null ? p.getName() : "admin");
+        return "redirect:/ui/campuses";
+    }
 }
