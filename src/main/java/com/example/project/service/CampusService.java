@@ -33,6 +33,10 @@ public class CampusService {
         return campusRepository.save(campus);
     }
 
+    public List<Campus> getByUniversity(Integer universityId){
+        return campusRepository.findByUniversityId(universityId);
+    }
+
     public Campus updateCampus(int id, Campus updated, String updatedBy){
         Campus existing = getById(id);
         if(existing == null) return null;

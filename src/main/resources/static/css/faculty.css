@@ -1,0 +1,170 @@
+/* ===== Fakülte Yönetimi – UI Parlatma ===== */
+:root{
+  --bg: #0b1020;
+  --card: #11162a;
+  --muted: #97a2b9;
+  --text: #eaf0ff;
+  --accent: #4f7cff;
+  --accent-2:#22c55e;
+  --danger:#ef4444;
+  --border: rgba(255,255,255,.08);
+  --shadow: 0 6px 18px rgba(4,13,33,.35), inset 0 1px 0 rgba(255,255,255,.03);
+  --radius: 16px;
+}
+
+/* Koyu arka plan (layout’a uyuyorsa) */
+body{
+  background: radial-gradient(1200px 800px at 15% 5%, #141b35 0%, #0b1020 60%, #070a16 100%);
+  color: var(--text);
+}
+
+/* Bölüm başlığı */
+section{
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+  padding: 18px;
+  border-radius: var(--radius);
+}
+section .h4{
+  letter-spacing:.2px;
+  background: linear-gradient(90deg, #fff, #94b0ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin-bottom: 14px;
+}
+
+/* Kart hissi */
+form, .table{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Form düzeni */
+form.mb-3{
+  padding: 14px;
+}
+.form-label{
+  color: var(--muted);
+  font-weight: 600;
+  font-size: .9rem;
+  margin-bottom: 6px;
+}
+.form-select, .form-control{
+  background: #0c1224;
+  border: 1px solid rgba(255,255,255,.08);
+  color: var(--text);
+  border-radius: 12px;
+}
+.form-select:disabled, .form-control:disabled{
+  opacity:.6;
+}
+.form-select:focus, .form-control:focus{
+  outline: none;
+  border-color: rgba(79,124,255,.7);
+  box-shadow: 0 0 0 4px rgba(79,124,255,.15);
+}
+
+/* Butonlar – Bootstrap’le uyumlu renk güncelleme */
+.btn{
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
+}
+.btn:active{ transform: translateY(1px); }
+
+.btn-success{
+  background: linear-gradient(180deg, #28d37d, var(--accent-2));
+  border-color: rgba(34,197,94,.4);
+  color: #052812;
+}
+.btn-success:hover{
+  filter: brightness(1.03);
+  box-shadow: 0 10px 20px rgba(34,197,94,.25);
+}
+
+.btn-primary{
+  background: linear-gradient(180deg, #6c8dff, var(--accent));
+  border-color: rgba(79,124,255,.5);
+  color: #0a1432;
+}
+.btn-primary:hover{
+  filter: brightness(1.04);
+  box-shadow: 0 10px 20px rgba(79,124,255,.28);
+}
+
+.btn-secondary{
+  background: linear-gradient(180deg, #2a355c, #202a4b);
+  border-color: rgba(255,255,255,.08);
+  color: var(--text);
+}
+.btn-secondary:hover{ filter: brightness(1.06); }
+
+.btn-danger{
+  background: linear-gradient(180deg, #ff6a6a, var(--danger));
+  border-color: rgba(239,68,68,.45);
+  color: #2a0606;
+}
+.btn-danger:hover{
+  filter: brightness(1.03);
+  box-shadow: 0 10px 20px rgba(239,68,68,.25);
+}
+
+/* Tablo */
+.table{
+  overflow: hidden;
+}
+.table thead th{
+  position: sticky; top: 0;
+  background: #0e1530;
+  color: #b9c6e1;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+}
+.table tbody tr{
+  transition: background .2s ease, transform .06s ease;
+}
+.table tbody tr:nth-child(odd){ background: rgba(255,255,255,.02); }
+.table tbody tr:hover{
+  background: rgba(79,124,255,.08);
+}
+.table td, .table th{
+  border-color: var(--border) !important;
+  vertical-align: middle;
+}
+
+/* İşlemler hücresi: buton aralığı */
+.table td .btn{
+  margin-right: 6px;
+}
+.table td form{
+  display: inline-block;
+}
+
+/* Küçük ekran iyileştirmeleri */
+@media (max-width: 992px){
+  form .row.g-2 > [class*="col-"]{
+    margin-bottom: 10px;
+  }
+  .table{
+    font-size: .95rem;
+  }
+}
+
+/* Hafif cam efekti (isteğe bağlı) */
+.form-select, .form-control{
+  backdrop-filter: blur(6px);
+}
+
+/* Dark mode sistemine zaten koyuyuz; açık tema isterse: */
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f3f6ff; --card:#ffffff; --text:#15223b; --muted:#5b6a86; --border:rgba(10,18,43,.08);
+    --shadow: 0 6px 18px rgba(30,50,120,.08), inset 0 1px 0 rgba(10,18,43,.03);
+  }
+  body{ background: radial-gradient(1200px 800px at 15% 5%, #e9eeff 0%, #f3f6ff 60%, #f7f9ff 100%); }
+  .table thead th{ background: #f2f5ff; color: #2b3960; }
+  .form-select, .form-control{ background: #fff; }
+  .btn-primary{ color: #fff; }
+  .btn-success{ color: #fff; }
+  .btn-danger{ color: #fff; }
+}

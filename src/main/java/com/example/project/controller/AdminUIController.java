@@ -2,6 +2,7 @@ package com.example.project.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.project.entity.Campus;
+import com.example.project.entity.Faculty;
 import com.example.project.entity.University;
 import com.example.project.service.CampusService;
 import com.example.project.service.DepartmentService;
@@ -136,4 +138,67 @@ public class AdminUIController {
         campusService.softDelete(id, p != null ? p.getName() : "admin");
         return "redirect:/ui/campuses";
     }
+    
+    
+    //Faculty
+    public static final String RETURN_PAGE = "redirect:/ui/faculties";
+    @GetMapping("/faculties")
+    public String faculties(@RequestParam(required=false) Integer universityId, Model model) {
+        Faculty form = new Faculty();
+        form.setCampus(new Campus()); 
+        model.addAttribute("faculties", facultyService.getAllFaculties());
+        model.addAttribute("universities", universityService.getAllUniversities());
+        List<Campus> campuses;
+        if(universityId != null)
+            campuses = campusService.getByUniversity(universityId);
+        else
+            campuses = java.util.Collections.<Campus>emptyList();
+        model.addAttribute("campuses",campuses);
+        model.addAttribute("form", form);
+        model.addAttribute("selectedUniversityId", universityId);
+        return "admin/faculty";
+    }
+
+    @PostMapping("/faculties")
+    public String createFaculty(@ModelAttribute("form") Faculty f, Principal p) {
+        facultyService.createFaculties(f, p != null ? p.getName() : "admin");
+        return RETURN_PAGE;
+    }
+
+    @GetMapping("/faculties/{id}/edit")
+    public String editFacultyForm(@PathVariable int id, Model model) { 
+        Faculty f = facultyService.getById(id);
+        if(f == null) return RETURN_PAGE + "?notfound";
+
+        model.addAttribute("faculties", facultyService.getAllFaculties());
+        model.addAttribute("universities", universityService.getAllUniversities());
+        Integer selectedUniversityId = null;
+        if(f.getCampus() != null && f.getCampus().getUniversity()!= null){
+            selectedUniversityId = f.getCampus().getUniversity().getId();
+        }
+        model.addAttribute("selectedUniversityId", selectedUniversityId);
+        
+        List<Campus> campuses;
+        if(selectedUniversityId != null)
+            campuses = campusService.getByUniversity(selectedUniversityId);
+        else
+            campuses = java.util.Collections.<Campus>emptyList();
+        model.addAttribute("campuses",campuses);
+
+        model.addAttribute("form", f);
+        return "admin/faculty";
+    }
+
+    @PostMapping("/faculties/{id}/edit")
+    public String editFaculty(@PathVariable int id, @ModelAttribute Faculty f, Principal p) {
+        facultyService.updateFaculty(id, f, p != null ? p.getName() : "admin");
+        return RETURN_PAGE;
+    }
+
+    @PostMapping("/faculties/{id}/delete")
+    public String deleteFaculty(@PathVariable int id, Principal p) {
+        facultyService.softDelete(id, p != null ? p.getName() : "admin");
+        return RETURN_PAGE;
+    }
+    
 }

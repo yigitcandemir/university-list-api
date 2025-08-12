@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr"
+      th:replace="~{admin/_layout :: layout(~{::section}, ~{::title}, ~{::head})}">
+<head>
+  <meta charset="UTF-8">
+  <title>Fakülte Yönetimi</title>
+  <link rel="stylesheet" th:href="@{/css/faculty.css(v=${#dates.createNow().time})}">
+</head>
+<body>
+<section>
+  <h2 class="h4 mb-3">Fakülteler</h2>
+
+  <!-- ===================== ÜNİVERSİTE SEÇİMİ (POSTBACK) ===================== -->
+  <form th:action="@{/ui/faculties}" method="get" class="mb-3">
+    <label class="form-label">Üniversite</label>
+    <select name="universityId"
+            class="form-select"
+            th:value="${selectedUniversityId}"
+            onchange="this.form.submit()">
+      <option value="">-- Üniversite Seç --</option>
+      <option th:each="u : ${universities}"
+              th:value="${u.id}"
+              th:text="${u.name}"
+              th:selected="${selectedUniversityId != null and u.id == selectedUniversityId}">
+      </option>
+    </select>
+    <noscript><button type="submit" class="btn btn-sm btn-primary mt-2">Seç</button></noscript>
+  </form>
+
+  <!-- ===================== EKLEME FORMU (form.id yok/0) ===================== -->
+  <form th:if="${form.id} == null or ${form.id} == 0"
+        th:object="${form}" method="post"
+        th:action="@{/ui/faculties}"
+        class="mb-3">
+
+    <input th:if="${_csrf != null}" type="hidden"
+           th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div class="row g-2">
+      <div class="col-md-3">
+        <label class="form-label">Kampüs</label>
+        <select th:field="*{campus.id}" class="form-select"
+                th:disabled="${#lists.isEmpty(campuses)}" required>
+          <option value=""
+                  th:text="${#lists.isEmpty(campuses) ? '-- Önce üniversite seçin --' : '-- Kampüs Seç --'}"></option>
+          <option th:each="c : ${campuses}" th:value="${c.id}" th:text="${c.name}"></option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Fakülte Adı</label>
+        <input th:field="*{name}" class="form-control" placeholder="Fakülte Adı" required />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Telefon</label>
+        <input th:field="*{telephone}" class="form-control" placeholder="Telefon" />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Dekan</label>
+        <input th:field="*{dean}" class="form-control" placeholder="Dekan" />
+      </div>
+
+      <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-success"
+                th:disabled="${#lists.isEmpty(campuses)}">Ekle</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- ===================== GÜNCELLEME FORMU (form.id dolu) ===================== -->
+  <form th:if="${form.id} != null and ${form.id} != 0"
+        th:object="${form}" method="post"
+        th:action="@{/ui/faculties/{id}/edit(id=${form.id})}"
+        class="mb-3">
+
+    <input type="hidden" th:field="*{id}" />
+    <input th:if="${_csrf != null}" type="hidden"
+           th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div class="row g-2">
+      <div class="col-md-3">
+        <label class="form-label">Kampüs</label>
+        <select th:field="*{campus.id}" class="form-select" 
+                th:disabled="${#lists.isEmpty(campuses)}" required>
+          <option value=""
+                  th:text="${#lists.isEmpty(campuses) ? '-- Önce üniversite seçin --' : '-- Kampüs Seç --'}"></option>
+          <option th:each="c : ${campuses}"
+                  th:value="${c.id}"
+                  th:text="${c.name}"
+                  th:selected="${form.campus != null and c.id == form.campus.id}">
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Fakülte Adı</label>
+        <input th:field="*{name}" class="form-control" required />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Telefon</label>
+        <input th:field="*{telephone}" class="form-control" />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Dekan</label>
+        <input th:field="*{dean}" class="form-control" />
+      </div>
+
+      <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a href="/ui/faculties" class="btn btn-secondary ms-2">Yeni</a>
+      </div>
+    </div>
+  </form>
+
+  <!-- ===================== LİSTE ===================== -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fakülte</th>
+        <th>Kampüs</th>
+        <th>Üniversite</th>
+        <th>Telefon</th>
+        <th>Dekan</th>
+        <th>İşlemler</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr th:each="f : ${faculties}">
+            <td th:text="${f.id}"></td>
+            <td th:text="${f.name}"></td>
+            <td th:text="${f.campus != null ? f.campus.name : ''}"></td>
+            <td th:text="${f.campus != null and f.campus.university != null ? f.campus.university.name : ''}"></td>
+            <td th:text="${f.telephone}"></td>
+            <td th:text="${f.dean}"></td>
+            <td>
+                <a th:href="@{/ui/faculties/{id}/edit(id=${f.id})}"
+                class="btn btn-sm btn-primary">Düzenle</a>
+                <form th:action="@{/ui/faculties/{id}/delete(id=${f.id})}"
+                    method="post" style="display:inline;">
+                <input th:if="${_csrf != null}" type="hidden"
+                        th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('Silinsin mi?')">Sil</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+</section>
+</body>
+</html>

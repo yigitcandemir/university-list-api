@@ -26,7 +26,7 @@ public class Campus {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "university_id")
@@ -65,10 +65,10 @@ public class Campus {
     @Column(name = "deleted_by")
     private String deletedBy;
 
-    public int getId(){
+    public Integer getId(){
         return id;
     }
-    public void setId(int id){
+    public void setId(Integer id){
         this.id = id;
     }
     public String getName(){
