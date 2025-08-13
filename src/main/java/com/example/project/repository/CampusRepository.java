@@ -11,5 +11,5 @@ import com.example.project.entity.Campus;
 @Repository
 public interface  CampusRepository extends JpaRepository<Campus, Integer>{
     List<Campus> findByDeletedFalse();
-    List<Campus>  findByUniversityId(Integer universityId);
+    List<Campus> findByUniversityId(Integer universityId);
 }

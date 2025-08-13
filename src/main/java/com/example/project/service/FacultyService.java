@@ -35,6 +35,14 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
+    public List<Faculty> getByCampus(Integer campusId){
+        return facultyRepository.findByCampusId(campusId);
+    }
+
+    public List<Faculty> getByUniversity(Integer universityId){
+        return facultyRepository.findByCampusUniversityId(universityId);
+    }
+
     @Transactional
     public Faculty updateFaculty(int id, Faculty updated, String updatedBy){
         Faculty existing = getById(id);
