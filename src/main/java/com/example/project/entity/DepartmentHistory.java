@@ -9,9 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
 
 @Entity
 @Table(name="department_history")
+@Getter
+@Setter
 public class DepartmentHistory {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,51 +44,4 @@ public class DepartmentHistory {
         if (operatedAt == null) operatedAt = LocalDateTime.now();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
-    }
-    
-    public int getfacultyId() {
-        return facultyId;
-    }
-
-    public void setfacultyId(int facultyId) {
-        this.facultyId = facultyId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
-    }
-
-    public String getOperatedBy() {
-        return operatedBy;
-    }
-
-    public void setOperatedBy(String operatedBy) {
-        this.operatedBy = operatedBy;
-    }
 }

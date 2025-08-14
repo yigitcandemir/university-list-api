@@ -23,8 +23,16 @@ public class DepartmentService {
         return departmentRepository.findByDeletedFalse();
     }
 
+    public List<Department> getByUniversity(Integer universityId){
+        return departmentRepository.findByFaculty_Campus_University_IdAndDeletedFalseOrderByNameAsc(universityId);
+    }
+
     public Department getById(int id){
         return departmentRepository.findById(id).orElse(null);
+    }
+
+    public List<Department> getByFaculty(Integer facultyId) {
+        return departmentRepository.findByFaculty_IdAndDeletedFalseOrderByNameAsc(facultyId);
     }
 
     public Department createDepartments(Department department, String createdBy){
@@ -39,7 +47,7 @@ public class DepartmentService {
         
         DepartmentHistory h = new DepartmentHistory();
         h.setDepartmentId(existing.getId());
-        h.setfacultyId(existing.getFaculty().getId());
+        h.setFacultyId(existing.getFaculty().getId());
         h.setName(existing.getName());
         h.setOperationType("UPDATE");
         h.setOperatedBy(updatedBy);
@@ -62,7 +70,7 @@ public class DepartmentService {
         if(department != null){
             department.setDeleted(true);
             department.setDeletedAt(LocalDateTime.now());
-            department.setDeleteBy(deletedBy);
+            department.setDeletedBy(deletedBy);
             departmentRepository.save(department);
         }
     }

@@ -1,9 +1,10 @@
 package com.example.project.controller;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,7 @@ import com.example.project.service.DepartmentService;
 import com.example.project.service.FacultyService;
 import com.example.project.service.UniversityService;
 
-
-
-
+@org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
 
 
 @Controller
@@ -43,7 +42,7 @@ public class AdminUIController {
         this. facultyService = facultyService;
         this.departmentService = departmentService;
     }
-    
+
     //UNIVERSITY
     @GetMapping
     public String dashboard(Model model) {                                                          //Admin ana sayfası için (dashboard)
@@ -61,13 +60,17 @@ public class AdminUIController {
 
     @PostMapping("/universities")
     public String createUniversity(@ModelAttribute("form") University u) {                          //Üniversite eklemek için yapı
-        universityService.createUniversity(u, "admin");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        universityService.createUniversity(u, username);
         return "redirect:/ui/universities";
     }
 
     @PostMapping("/universities/{id}/delete")
     public String deleteUniversity(@PathVariable int id) {                                          //Üniversite silmek için yapı
-        universityService.softDelete(id, "admin");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        universityService.softDelete(id, username);
         return "redirect:/ui/universities";
     }
 
@@ -86,6 +89,8 @@ public class AdminUIController {
 
     @PostMapping("/universities/{id}/edit")
     public String updateUniversity(@PathVariable int id, @ModelAttribute("form") University u, @RequestParam(value = "logo", required = false) MultipartFile logo) {    //Üniversite güncellemek için yapı
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
         if(logo != null && !logo.isEmpty()){
             try {
                 universityService.updateLogo(id, logo);
@@ -94,7 +99,7 @@ public class AdminUIController {
             }
         }
 
-        universityService.updateUniversity(id, u, "admin");
+        universityService.updateUniversity(id, u, username);
         return "redirect:/ui/universities";
     }
 
@@ -112,8 +117,10 @@ public class AdminUIController {
     }
 
     @PostMapping("/campuses")
-    public String createCampus(@ModelAttribute("form") Campus c, Principal p) {
-        campusService.createCampuses(c, p != null ? p.getName() : "admin");
+    public String createCampus(@ModelAttribute("form") Campus c) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        campusService.createCampuses(c, username);
         return "redirect:/ui/campuses";
     }
 
@@ -129,14 +136,18 @@ public class AdminUIController {
     }
 
     @PostMapping("/campuses/{id}/edit")
-    public String editCampus(@PathVariable int id, @ModelAttribute Campus c, Principal p) {
-        campusService.updateCampus(id, c, p != null ? p.getName() : "admin");
+    public String editCampus(@PathVariable int id, @ModelAttribute Campus c) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        campusService.updateCampus(id, c, username);
         return "redirect:/ui/campuses";
     }
     
     @PostMapping("/campuses/{id}/delete")
-    public String deleteCampus(@PathVariable int id, Principal p) {
-        campusService.softDelete(id, p != null ? p.getName() : "admin");
+    public String deleteCampus(@PathVariable int id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        campusService.softDelete(id, username);
         return "redirect:/ui/campuses";
     }
     
@@ -159,8 +170,10 @@ public class AdminUIController {
     }
 
     @PostMapping("/faculties")
-    public String createFaculty(@ModelAttribute("form") Faculty f, Principal p) {
-        facultyService.createFaculties(f, p != null ? p.getName() : "admin");
+    public String createFaculty(@ModelAttribute("form") Faculty f) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        facultyService.createFaculties(f, username);
         return RETURN_PAGE_FACULTY;
     }
 
@@ -185,14 +198,18 @@ public class AdminUIController {
     }
 
     @PostMapping("/faculties/{id}/edit")
-    public String editFaculty(@PathVariable int id, @ModelAttribute Faculty f, Principal p) {
-        facultyService.updateFaculty(id, f, p != null ? p.getName() : "admin");
+    public String editFaculty(@PathVariable int id, @ModelAttribute Faculty f) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        facultyService.updateFaculty(id, f, username);
         return RETURN_PAGE_FACULTY;
     }
 
     @PostMapping("/faculties/{id}/delete")
-    public String deleteFaculty(@PathVariable int id, Principal p) {
-        facultyService.softDelete(id, p != null ? p.getName() : "admin");
+    public String deleteFaculty(@PathVariable int id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        facultyService.softDelete(id, username);
         return RETURN_PAGE_FACULTY;
     }
 
@@ -224,8 +241,10 @@ public class AdminUIController {
     }
 
     @PostMapping("/departments")
-    public String createDepartment(@ModelAttribute("form") Department d, Principal p, Model model) {
-    if (d.getFaculty() == null || d.getFaculty().getId() == null) {
+    public String createDepartment(@ModelAttribute("form") Department d, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        if (d.getFaculty() == null || d.getFaculty().getId() == null) {
 
             model.addAttribute("error", "Lütfen bir fakülte seçiniz.");
             model.addAttribute("universities", universityService.getAllUniversities());
@@ -237,7 +256,7 @@ public class AdminUIController {
             return "admin/department"; 
         }
 
-        departmentService.createDepartments(d, p != null ? p.getName() : "admin");
+        departmentService.createDepartments(d, username);
         return RETURN_PAGE_DEPARTMENT;
     }
 
@@ -279,14 +298,18 @@ public class AdminUIController {
     }
 
     @PostMapping("/departments/{id}/edit")
-    public String editDepartment(@PathVariable int id, @ModelAttribute Department d, Principal p) {
-        departmentService.updateDepartment(id, d, p != null ? p.getName() : "admin");
+    public String editDepartment(@PathVariable int id, @ModelAttribute Department d) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        departmentService.updateDepartment(id, d, username);
         return RETURN_PAGE_DEPARTMENT;
     }
 
     @PostMapping("/departments/{id}/delete")
-    public String deleteDepartment(@PathVariable int id, Principal p) {
-        departmentService.softDelete(id, p != null ? p.getName() : "admin");
+    public String deleteDepartment(@PathVariable int id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        departmentService.softDelete(id, username);
         return RETURN_PAGE_DEPARTMENT;
     }
 }

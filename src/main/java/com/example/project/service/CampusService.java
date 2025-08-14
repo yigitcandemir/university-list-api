@@ -71,7 +71,7 @@ public class CampusService {
         if(campus != null){
             campus.setDeleted(true);
             campus.setDeletedAt(LocalDateTime.now());
-            campus.setDeleteBy(deletedBy);
+            campus.setDeletedBy(deletedBy);
             campusRepository.save(campus);
         }
     }

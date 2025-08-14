@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+  <meta charset="UTF-8"><title th:text="${university.name}">Üniversite</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+  <nav><a th:href="@{/universities}">← Üniversitelere Dön</a></nav>
+
+  <h2 th:text="${university.name}">Ad</h2>
+  <div th:if="${university.website}">
+    <a th:href="${university.website}" target="_blank">Website</a>
+  </div>
+
+  <h3>Kampüsler</h3>
+  <ul>
+    <li th:each="c : ${campuses}">
+      <a th:href="@{|/campuses/${c.id}|}" th:text="${c.name}">Kampüs</a>
+      <span th:text="${c.address}"></span>
+    </li>
+  </ul>
+
+  <h3>Fakülteler</h3>
+  <ul>
+    <li th:each="f : ${faculties}">
+      <a th:href="@{|/faculties/${f.id}|}" th:text="${f.name}">Fakülte</a>
+    </li>
+  </ul>
+
+  <h3>Bölümler</h3>
+  <ul>
+    <li th:each="d : ${departments}">
+      <a th:href="@{|/departments/${d.id}|}" th:text="${d.name}">Bölüm</a>
+    </li>
+  </ul>
+</body>
+</html>

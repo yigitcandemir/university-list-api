@@ -19,9 +19,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "faculty")
+@Getter
+@Setter
 public class Faculty {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -68,82 +72,4 @@ public class Faculty {
 
     public Faculty(){}
 
-    public Integer getId(){
-        return id;
-    }
-    public void setId(Integer id){
-        this.id = id;
-    }
-    public String getName(){
-        return name;
-    } 
-    public void setName(String name){
-        this.name = name;
-    }
-    public Campus getCampus(){
-        return campus;
-    }
-    public void setCampus(Campus campus){
-        this.campus = campus;
-    }
-    public String getTelephone(){
-        return telephone;
-    }
-    public void setTelephone(String telephone){
-        this.telephone = telephone;
-    }
-    public String getDean(){
-        return dean;
-    }
-    public void setDean(String dean){
-        this.dean = dean;
-    }
-    public List<Department> getDepartment(){
-        return department;
-    }
-    public void setDepartment(List<Department> department){
-        this.department = department;
-    }
-    public Boolean isDeleted(){
-        return deleted;
-    }
-    public void setDeleted(Boolean deleted){
-        this.deleted = deleted;
-    }
-    public LocalDateTime getCreatedAt(){
-        return createdAt;
-    }
-    public void setCreatedAt(LocalDateTime createdAt){
-        this.createdAt = createdAt;
-    }
-    public LocalDateTime getUpdatedAt(){
-        return updatedAt;
-    }
-    public void setUpdatedAt(LocalDateTime updatedAt){
-        this.updatedAt = updatedAt;
-    }
-    public LocalDateTime getDeletedAt(){
-        return deletedAt;
-    }
-    public void setDeletedAt(LocalDateTime deletedAt){
-        this.deletedAt = deletedAt;
-    }
-    public String getDeleteBy(){
-        return deletedBy;
-    }
-    public void setDeletedBy(String deletedBy){
-        this.deletedBy = deletedBy;
-    }
-    public String getCreatedBy(){
-        return createdBy;
-    }
-    public void setCreatedBy(String createdBy){
-        this.createdBy = createdBy;
-    }
-    public String getUpdatedBy(){
-        return updatedBy;
-    } 
-    public void setUpdatedBy(String updatedBy){
-        this.updatedBy = updatedBy;
-    }
 }

@@ -9,9 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="faculty_history")
+@Getter
+@Setter
 public class FacultyHistory {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,68 +47,4 @@ public class FacultyHistory {
         if (actionAt == null) actionAt = LocalDateTime.now();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getFacultyId() {
-        return facultyId;
-    }
-
-    public void setFacultyId(int facultyId) {
-        this.facultyId = facultyId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getActionType() {
-        return actionType;
-    }
-
-    public void setActionType(String actionType) {
-        this.actionType = actionType;
-    }
-
-    public String getActionBy() {
-        return actionBy;
-    }
-
-    public void setActionBy(String actionBy) {
-        this.actionBy = actionBy;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-    
-    public String getDean() {
-        return dean;
-    }
-
-    public void setDean(String dean) {
-        this.dean = dean;
-    }
-
-    
-    public int getCampusId() {
-        return campusId;
-    }
-
-    public void setCampusId(int campusId) {
-        this.campusId = campusId;
-    }
 }

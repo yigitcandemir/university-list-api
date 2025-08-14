@@ -24,11 +24,16 @@ public class UniversityService {
         List<University> active = new ArrayList<>();
 
         for(University u : all){
-            if(!u.isDeleted()){
+            if(!u.getDeleted()){
                 active.add(u);
             }
         }
         return active;
+    }
+
+    public List<University> searchByName(String q){
+        if(q == null || q.isBlank()) return getAllUniversities();
+        return universityRepository.findByNameContainingIgnoreCase(q.trim());
     }
 
     public University getById(int id){

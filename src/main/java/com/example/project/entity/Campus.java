@@ -19,9 +19,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "campus")
+@Getter
+@Setter
 public class Campus {
     
     @Id
@@ -64,89 +68,4 @@ public class Campus {
 
     @Column(name = "deleted_by")
     private String deletedBy;
-
-    public Integer getId(){
-        return id;
-    }
-    public void setId(Integer id){
-        this.id = id;
-    }
-    public String getName(){
-        return name;
-    }
-    public void setName(String name){
-        this.name = name;
-    }
-    public String getCity(){
-        return city;
-    }
-    public void setCity(String city){
-        this.city = city;
-    }
-    public String getDistrict(){
-        return district;
-    }
-    public void setDistrict(String district){
-        this.district = district;
-    }
-    public String getAddress(){
-        return address;
-    }
-    public void setAddress(String address){
-        this.address = address;
-    }
-    public List<Faculty> getFaculties(){
-        return faculties;
-    }
-    public void setFaculties(List<Faculty> faculties){
-        this.faculties = faculties;
-    }
-    public University getUniversity(){
-        return university;
-    }
-    public void setUniversity(University university){
-        this.university = university;
-    }
-    public Boolean isDeleted(){
-        return deleted;
-    }
-    public void setDeleted(Boolean deleted){
-        this.deleted = deleted;
-    }
-    public LocalDateTime getCreatedAt(){
-        return createdAt;
-    }
-    public void setCreatedAt(LocalDateTime createdAt){
-        this.createdAt = createdAt;
-    }
-    public LocalDateTime getUpdatedAt(){
-        return updatedAt;
-    }
-    public void setUpdatedAt(LocalDateTime updatedAt){
-        this.updatedAt = updatedAt;
-    }
-    public LocalDateTime getDeletedAt(){
-        return deletedAt;
-    }
-    public void setDeletedAt(LocalDateTime deletedAt){
-        this.deletedAt = deletedAt;
-    }
-    public String getDeleteBy(){
-        return deletedBy;
-    }
-    public void setDeleteBy(String deletedBy){
-        this.deletedBy = deletedBy;
-    }
-    public String getCreatedBy(){
-        return createdBy;
-    }
-    public void setCreatedBy(String createdBy){
-        this.createdBy = createdBy;
-    }
-    public String getUpdatedBy(){
-        return updatedBy;
-    } 
-    public void setUpdatedBy(String updatedBy){
-        this.updatedBy = updatedBy;
-    }
 }

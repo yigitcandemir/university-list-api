@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Üniversiteler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Proje genel stilin -->
+  <link rel="stylesheet" th:href="@{/css/app.css}" />
+  <!-- Sayfaya özgü birkaç küçük yardımcı sınıf (istersen app.css'e taşı) -->
+  <style>
+    .container {max-width: 960px; margin: 0 auto; padding: 1rem;}
+    .header {display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;}
+    .spacer {margin-left: auto;}
+    .btn {display:inline-block; padding:.5rem .75rem; border-radius:.5rem; text-decoration:none; border:1px solid #e5e7eb;}
+    .btn:hover {background:#f8fafc;}
+    .searchbar {display:flex; gap:.5rem; align-items:center; margin:.5rem 0 1rem;}
+    .searchbar input {flex:1; padding:.5rem .75rem; border:1px solid #e5e7eb; border-radius:.5rem;}
+    .list {list-style:none; padding:0; margin:0; display:grid; grid-template-columns:1fr; gap:.5rem;}
+    @media (min-width: 640px){ .list {grid-template-columns:1fr 1fr;} }
+    .item {border:1px solid #e5e7eb; border-radius:.75rem; padding:.75rem .9rem; background:#fff; display:flex; gap:.5rem; align-items:center; justify-content:space-between;}
+    .item a {text-decoration:none;}
+    .name {font-weight:600; color:#111827;}
+    .meta {display:flex; gap:.5rem; align-items:center;}
+    .badge {font-size:.75rem; color:#6b7280;}
+    .ext {font-size:.85em;}
+    .empty {padding:1rem; text-align:center; color:#6b7280; border:1px dashed #e5e7eb; border-radius:.75rem; background:#fafafa;}
+    .count {color:#6b7280; font-size:.9rem;}
+  </style>
+</head>
+<body>
+  <main class="container">
+    <!-- ÜST KISIM -->
+    <header class="header">
+      <div>
+        <h1 class="h3" style="margin:0;">Üniversiteler</h1>
+        <div class="count">
+          <span th:text="${#lists.size(universities)} + ' kayıt bulundu'">0 kayıt bulundu</span>
+        </div>
+      </div>
+
+      <a class="btn spacer" th:href="@{/login}">Admin Giriş</a>
+    </header>
+
+    <!-- ARAMA (opsiyonel; GET ile aynı sayfaya) -->
+    <form class="searchbar" th:action="@{/universities}" method="get" role="search" aria-label="Üniversite Ara">
+      <input type="text" name="q" placeholder="Üniversite adı ara..." th:value="${q}" />
+      <button class="btn" type="submit">Ara</button>
+    </form>
+    
+    <div class="count">
+      <span th:text="${count} + ' kayıt bulundu'">0 kayıt bulundu</span>
+    </div>
+
+    <!-- BOŞ DURUM -->
+    <div class="empty" th:if="${#lists.isEmpty(universities)}">
+      Henüz üniversite eklenmemiş görünüyor.
+      <div style="margin-top:.25rem;">Yönetici panelinden yeni kayıt ekleyebilirsin.</div>
+    </div>
+
+    <!-- LİSTE -->
+    <ul class="list" th:if="${!#lists.isEmpty(universities)}" role="list">
+      <li class="item" th:each="u, stat : ${universities}">
+        <div>
+          <a class="name" th:href="@{|/universities/${u.id}|}" th:text="${u.name}">Üniversite Adı</a>
+          <div class="badge" th:text="${'ID: ' + u.id}">ID: 0</div>
+        </div>
+
+        <div class="meta">
+          <a class="btn"
+             th:if="${u.website != null and !#strings.isEmpty(u.website)}"
+             th:href="${u.website}"
+             target="_blank"
+             rel="noopener noreferrer"
+             aria-label="Resmi web sitesini yeni pencerede aç">
+            Site <span class="ext" aria-hidden="true">↗</span>
+          </a>
+          <a class="btn" th:href="@{|/universities/${u.id}|}">Detay</a>
+        </div>
+      </li>
+    </ul>
+
+    <!-- (İstersen) Basit sayfalama için yer tutucu 
+    <nav aria-label="Sayfalama" style="margin-top:1rem; display:flex; gap:.5rem; justify-content:center;">
+      <a class="btn" href="?page=1">Önceki</a>
+      <a class="btn" href="?page=3">Sonraki</a>
+    </nav>
+    -->
+  </main>
+</body>
+</html>
