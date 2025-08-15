@@ -68,4 +68,11 @@ public class Campus {
 
     @Column(name = "deleted_by")
     private String deletedBy;
+
+    public Campus(Integer id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
+    public Campus(){}
 }

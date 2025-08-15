@@ -51,7 +51,7 @@
     <noscript><button type="submit" class="btn btn-primary mt-2">Seç</button></noscript>
   </form>
 
-  <!-- ===================== EKLEME FORMU ===================== -->
+<!-- ===================== EKLEME FORMU ===================== -->
 <form th:if="${form.id} == null or ${form.id} == 0"
       th:object="${form}" method="post"
       th:action="@{/ui/departments}" class="mb-3">
@@ -63,22 +63,25 @@
   <input type="hidden" name="universityId" th:value="${selectedUniversityId}">
   <input type="hidden" name="campusId" th:value="${selectedCampusId}">
   <input type="hidden" name="facultyId" th:value="${selectedFacultyId}">
-
-
   <input type="hidden" name="faculty.id" th:value="${selectedFacultyId}" />
 
   <div class="row g-2">
     <div class="col-md-4">
-      <label class="form-label d-block">Fakülte</label>
-      <!-- Sadece bilgi amaçlı (readonly) gösterim -->
-      <span class="form-text" 
-            th:text="${selectedFacultyId != null ? 'Seçili fakülte ID: ' + selectedFacultyId : ''}">
-      </span>
+      <label class="form-label">Departman Adı</label>
+      <input th:field="*{name}" class="form-control" placeholder="Departman Adı" required />
     </div>
 
     <div class="col-md-4">
-      <label class="form-label">Departman Adı</label>
-      <input th:field="*{name}" class="form-control" placeholder="Departman Adı" required />
+      <label class="form-label">Üst Departman (opsiyonel)</label>
+      <select name="parent.id" class="form-select"
+              th:disabled="${#lists.isEmpty(departments)}">
+        <option value="">(Root)</option>
+        <!-- Aynı fakültenin departmanları ile doldur -->
+        <option th:each="pd : ${departments}"
+                th:value="${pd.id}"
+                th:text="${pd.name}">
+        </option>
+      </select>
     </div>
 
     <div class="col-auto align-self-end">
@@ -89,28 +92,34 @@
 </form>
 
   <!-- ===================== GÜNCELLEME FORMU ===================== -->
-  <form th:if="${form.id} != null and ${form.id} != 0"
-        th:object="${form}" method="post"
-        th:action="@{/ui/departments/{id}/edit(id=${form.id})}"
-        class="mb-3">
+<form th:if="${form.id} != null and ${form.id} != 0"
+      th:object="${form}" method="post"
+      th:action="@{/ui/departments/{id}/edit(id=${form.id})}"
+      class="mb-3">
 
-    <input type="hidden" th:field="*{id}" />
-    <input th:if="${_csrf != null}" type="hidden"
-           th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  <input type="hidden" th:field="*{id}" />
+  <input th:if="${_csrf != null}" type="hidden"
+         th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-    <div class="row g-2">
-      <div class="col-md-4">
-        <label class="form-label">Departman Adı</label>
-        <input th:field="*{name}" class="form-control" required />
-      </div>
+  <!-- Fakülte ID mutlaka POST edilmeli -->
+  <input type="hidden" th:field="*{faculty.id}" th:value="${selectedFacultyId}" />
 
-      <div class="col-auto align-self-end">
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-        <a href="/ui/departments" class="btn btn-secondary ms-2">Yeni</a>
-      </div>
+  <!-- Parent değişmeyecekse (mevcut parent'ın korunması için) -->
+  <input type="hidden" th:if="${form.parent != null}" th:field="*{parent.id}" />
+
+  <div class="row g-2">
+    <div class="col-md-4">
+      <label class="form-label">Departman Adı</label>
+      <input th:field="*{name}" class="form-control" required />
     </div>
-  </form>
 
+    <div class="col-auto align-self-end">
+      <button type="submit" class="btn btn-primary">Güncelle</button>
+      <a th:href="@{/ui/departments(universityId=${selectedUniversityId},campusId=${selectedCampusId},facultyId=${selectedFacultyId})}"
+         class="btn btn-secondary ms-2">Yeni</a>
+    </div>
+  </div>
+</form>
   <!-- ===================== LİSTE ===================== -->
   <table class="table table-bordered">
     <thead>

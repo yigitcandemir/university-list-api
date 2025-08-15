@@ -30,9 +30,6 @@ public class Faculty {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    public String getDeletedBy() {
-        return deletedBy;
-    }
     private String name;
 
     @ManyToOne
